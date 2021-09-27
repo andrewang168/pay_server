@@ -45,6 +45,11 @@ app.get('/merchant-session/new', function(req, res) {
 
   request.post(options, function(error, response, body) {
     if (error) throw new Error(error)
+    if (body) {
+      // Apple returns a payload with `displayName`, but passing this
+      // to `completeMerchantValidation` causes it to error.
+      delete body.displayName;
+    }
     res.send(body);
   });
 });
