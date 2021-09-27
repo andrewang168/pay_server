@@ -69,7 +69,7 @@ app.get('/.well-known/apple-developer-merchantid-domain-association.txt', (req, 
       merchantIdentifier: 'merchant.insto.tap.sandbox',
       displayName: 'Apple Pay demo',
       initiative: 'web',
-      initiativeContext: 'd68d-114-34-53-47.ngrok.io'
+      initiativeContext: 'insto-applepay-demo.herokuapp.com'
     },
     json: true
   };
