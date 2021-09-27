@@ -14,5 +14,13 @@
     "request": "^2.81.0"
   },
   "devDependencies": {},
-  "description": ""
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrewang168/pay_server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/andrewang168/pay_server/issues"
+  },
+  "homepage": "https://github.com/andrewang168/pay_server#readme"
 }
