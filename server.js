@@ -36,7 +36,7 @@ app.get('/merchant-session/new', function(req, res) {
     key: cert,
     body: {
       merchantIdentifier: 'merchant.insto.tap.sandbox',
-      displayName: 'Apple Pay demo',
+      displayName: ' ',
       initiative: 'web',
       initiativeContext: 'insto-applepay-demo.herokuapp.com'
     },
@@ -90,6 +90,8 @@ app.post('/call-payment-provider', function(req, res) {
 
   request(options, function (error, response, body) {
     if (error) throw new Error(error);
+    body["status"] = 0
+    body["msg"] = 'Success'
     res.send(body);
   });
 });
