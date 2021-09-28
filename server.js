@@ -91,10 +91,9 @@ app.post('/call-payment-provider', function(req, res) {
   request(options, function (error, response, body) {
     if (error) throw new Error(error);
 
-    var data = body
-    data["status"] = 0
-    data["msg"] = 'Success'
-    res.send(data);
+    body["status"] = 0;
+    body["msg"] = 'Success';
+    res.send(body);
   });
 });
 
