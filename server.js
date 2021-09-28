@@ -23,9 +23,9 @@ app.use(function(req, res, next) {
   next();
 });
 
-// app.get('/', function(req, res) {
-//   res.sendFile(__dirname + '/index.html');
-// });
+app.get('/', function(req, res) {
+  res.sendFile(__dirname + '/index.html');
+});
 
 app.get('/.well-known/apple-developer-merchantid-domain-association.txt', function(req, res) {
   res.sendFile(__dirname + '/.well-known/apple-developer-merchantid-domain-association.txt');
