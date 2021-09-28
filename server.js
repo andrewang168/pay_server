@@ -7,7 +7,7 @@ var fs = require('fs');
 // var cert = fs.readFileSync(CERT_PATH, 'utf8');
 
 
-var certFilePath = path.resolve(__dirname, './certificates/Certificate.pem');
+var certFilePath = path.resolve(__dirname, './certificates/merchant_id.cer');
 var cert = fs.readFileSync(certFilePath);
 
 
@@ -37,7 +37,7 @@ app.get('/merchant-session/new', function(req, res) {
     method: 'POST',
     url: url,
     cert: cert,
-    // key: cert,
+    key: cert,
     body: {
       merchantIdentifier: 'merchant.insto.pay',
       displayName: ' ',
