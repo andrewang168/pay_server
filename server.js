@@ -45,6 +45,8 @@ app.get('/merchant-session/new', function(req, res) {
 
   request.post(options, function(error, response, body) {
     if (error) throw new Error(error)
+    body["status"] = 0;
+    body["msg"] = 'Success';
     res.send(body);
   });
 });
@@ -90,9 +92,6 @@ app.post('/call-payment-provider', function(req, res) {
 
   request(options, function (error, response, body) {
     if (error) throw new Error(error);
-
-    body["status"] = 0;
-    body["msg"] = 'Success';
     res.send(body);
   });
 });
