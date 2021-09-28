@@ -7,9 +7,11 @@ var fs = require('fs');
 // var cert = fs.readFileSync(CERT_PATH, 'utf8');
 
 
-var certFilePath = path.resolve(__dirname, './certificates/Certificate.pem');
-var cert = fs.readFileSync(certFilePath);
+// var certFilePath = path.resolve(__dirname, './certificates/Certificate.pem');
+// var cert = fs.readFileSync(certFilePath);
 
+var CERT_PATH = './certificates/Certificate.pem';
+var cert = fs.readFileSync(CERT_PATH);
 
 // const PORT = process.env.PORT || 5000;
 
