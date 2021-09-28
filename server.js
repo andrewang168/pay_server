@@ -7,7 +7,7 @@ var fs = require('fs');
 // var cert = fs.readFileSync(CERT_PATH, 'utf8');
 
 
-var certFilePath = path.resolve(__dirname, './certificates/merchant_id.cer');
+var certFilePath = path.resolve(__dirname, './certificates/Certificate.pem');
 var cert = fs.readFileSync(certFilePath);
 
 
