@@ -3,9 +3,13 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 
-var CERT_PATH = './merchant_id.pem';
+// var CERT_PATH = './merchant_id.pem';
+// var cert = fs.readFileSync(CERT_PATH, 'utf8');
 
-var cert = fs.readFileSync(CERT_PATH, 'utf8');
+
+var certFilePath = path.resolve(__dirname, './certificates/Certificate.pem');
+var cert = fs.readFileSync(certFilePath);
+
 
 // const PORT = process.env.PORT || 5000;
 
@@ -33,9 +37,9 @@ app.get('/merchant-session/new', function(req, res) {
     method: 'POST',
     url: url,
     cert: cert,
-    key: cert,
+    // key: cert,
     body: {
-      merchantIdentifier: 'merchant.insto.tap.sandbox',
+      merchantIdentifier: 'merchant.insto.pay',
       displayName: ' ',
       initiative: 'web',
       initiativeContext: 'insto-applepay-demo.herokuapp.com'
