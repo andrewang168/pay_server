@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Apple Pay Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <style>
+    .wrapper {
+      text-align: center;
+    }
+
+    .pay-btn {
+      -webkit-appearance: -apple-pay-button;
+      -apple-pay-button-type: buy;
+    }
+
+    #no-apple-pay,
+    #apple-pay,
+    #success {
+      display: none;
+    }
+  </style>
+  <script>
+    // const NGROK_HTTPS_HOST = 'https://d68d-114-34-53-47.ngrok.io';
+    const NGROK_HTTPS_HOST = 'https://insto-applepay-demo.herokuapp.com';
+    const MERCHANT_IDENTIFIER = 'merchant.insto.tap.sandbox';
+    let session;
+
+    document.addEventListener('DOMContentLoaded', function(){
+      if (window.ApplePaySession && ApplePaySession.canMakePayments()) {
+        var promise = ApplePaySession.canMakePaymentsWithActiveCard(MERCHANT_IDENTIFIER);
+        promise.then(function(canMakePayments) {
+          if (canMakePayments) {
+            console.log('canMakePayments(): true');
+            document.getElementById('apple-pay').style.display = 'block';
+          }
+        });
+      } else {
+        document.getElementById('no-apple-pay').style.display = 'block';
+      }
+    }, false);
+
+    function init () {
+      var request = {
+        countryCode: 'TW',
+        currencyCode: 'TWD',
+        supportedNetworks: ['visa', 'masterCard', 'amex', 'discover'],
+        merchantCapabilities: ['supports3DS'],
+        total: {
+          label: 'Apple Pay demo',
+          amount: '199',
+          type: 'final'
+        }
+      }
+
+      session = new ApplePaySession(1, request);
+      session.onvalidatemerchant = ({ validationURL }) => {
+        fetch(`${NGROK_HTTPS_HOST}/merchant-session/new/?validationURL=` + validationURL)
+        .then(res => res.json())
+        .then(data => {
+          session.completeMerchantValidation(data);
+        })
+        .catch(err => {
+          console.error("Error fetching merchant session", err);
+        });
+      }
+
+      session.onpaymentauthorized = function (event) {
+        var token = JSON.stringify(event.payment.token.paymentData);
+
+        fetch(`${NGROK_HTTPS_HOST}/call-payment-provider/`, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(event.payment.token)
+        })
+        .then(res => res.json())
+        .then(data => {
+          console.log(data)
+          var status;
+          if (data.Payment.Status) {
+            status = ApplePaySession.STATUS_SUCCESS;
+            document.getElementById('success').style.display = "block";
+          } else {
+            status = ApplePaySession.STATUS_FAILURE;
+          }
+          session.completePayment(status);
+        });
+      }
+
+      session.begin();
+    }
+  </script>
+</head>
+
+<body>
+  <div class="wrapper">
+    <h2 id="no-apple-pay">
+      Sorry, this device don't accept Apple Pay.
+    </h2>
+    <div id="apple-pay">
+      <h2>Product Title</h2>
+      <button lang="pt" class="pay-btn" style="" onclick="init()"></button>
+    </div>
+    <div id="success">
+      <hr/>
+      <h2>Congrats, order done!</h2>
+    </div>
+  </div>
+</body>
+
+</html>
