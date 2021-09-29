@@ -3,21 +3,13 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 
-// var CERT_PATH = './merchant_id.pem';
-// var cert = fs.readFileSync(CERT_PATH, 'utf8');
-
-
-// var certFilePath = path.resolve(__dirname, './certificates/Certificate.pem');
-// var cert = fs.readFileSync(certFilePath);
-
-var CERT_PATH = './certificates/Certificate.pem';
-var cert = fs.readFileSync(CERT_PATH);
-
-// const PORT = process.env.PORT || 5000;
+var CERT_PATH = './merchant_id.pem';
+var cert = fs.readFileSync(CERT_PATH, 'utf8');
 
 var app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json())
+
 
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -25,16 +17,21 @@ app.use(function(req, res, next) {
   next();
 });
 
+
+app.get('/.well-known/apple-developer-merchantid-domain-association.txt', (req, res) => {
+  res.send(fs.readFileSync('apple-developer-merchantid-domain-association.txt'));
+});
+
+
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/.well-known/apple-developer-merchantid-domain-association.txt', function(req, res) {
-  res.sendFile(__dirname + '/.well-known/apple-developer-merchantid-domain-association.txt');
-});
 
 app.get('/merchant-session/new', function(req, res) {
-  var url = req.query.validationURL || 'https://apple-pay-gateway-cert.apple.com/paymentservices/startSession';
+  // var url = 'https://apple-pay-gateway.apple.com/paymentservices/paymentSession'
+  // var url = 'https://apple-pay-gateway-cert.apple.com/paymentservices/startSession'
+  var url = req.query.validationURL || 'https://apple-pay-gateway.apple.com/paymentservices/paymentSession';
   var options = {
     method: 'POST',
     url: url,
@@ -42,20 +39,25 @@ app.get('/merchant-session/new', function(req, res) {
     key: cert,
     body: {
       merchantIdentifier: 'merchant.insto.pay',
-      displayName: ' ',
+      displayName: 'INSTO',
+      // domainName: 'andrewang168.github.io'
+
       initiative: 'web',
-      initiativeContext: 'insto-applepay-demo.herokuapp.com'
+      // initiativeContext: 'insto-applepay-demo.herokuapp.com'
+      initiativeContext: '770a-111-249-154-123.ngrok.io',
     },
     json: true
   };
 
   request.post(options, function(error, response, body) {
     if (error) throw new Error(error)
-    body["status"] = 0;
-    body["msg"] = 'Success';
+    // body["status"] = 0;
+    // body["msg"] = 'Success';
+    console.log(body);
     res.send(body);
   });
 });
+
 
 app.post('/call-payment-provider', function(req, res) {
   console.log('request:', req.body)
@@ -101,6 +103,22 @@ app.post('/call-payment-provider', function(req, res) {
     res.send(body);
   });
 });
+
+
+app.get('/hello', (req, res) => {
+    res.send('Hi!');
+});
+
+
+// function extractMerchantID(cert) {
+//   try {
+//     var info = x509.parseCert(cert);
+//     console.log(info);
+//     return info.extensions['1.2.840.113635.100.6.32'].substr(2);
+//   } catch (e) {
+//     console.error("Unable to extract merchant ID from certificate " + CERT_PATH);
+//   }
+// }
 
 
 var server = app.listen(process.env.PORT || 3000, function() {

@@ -22,8 +22,8 @@
     }
   </style>
   <script>
-    // const NGROK_HTTPS_HOST = 'https://d68d-114-34-53-47.ngrok.io';
-    const NGROK_HTTPS_HOST = 'https://insto-applepay-demo.herokuapp.com';
+    const NGROK_HTTPS_HOST = 'https://770a-111-249-154-123.ngrok.io';
+    // const NGROK_HTTPS_HOST = 'https://insto-applepay-demo.herokuapp.com';
     const MERCHANT_IDENTIFIER = 'merchant.insto.pay';
     let session;
 
@@ -48,21 +48,18 @@
         supportedNetworks: ['visa', 'masterCard', 'amex', 'discover'],
         merchantCapabilities: ['supports3DS'],
         total: {
-          label: 'Apple Pay demo',
+          label: 'INSTO Store',
           amount: '199',
           type: 'final'
         }
       }
 
-      session = new ApplePaySession(1, request);
+      session = new ApplePaySession(2, request);
       session.onvalidatemerchant = ({ validationURL }) => {
         fetch(`${NGROK_HTTPS_HOST}/merchant-session/new/?validationURL=` + validationURL)
         .then(res => res.json())
         .then(data => {
           session.completeMerchantValidation(data);
-        })
-        .catch(err => {
-          console.error("Error fetching merchant session", err);
         });
       }
 
@@ -102,7 +99,7 @@
       Sorry, this device don't accept Apple Pay.
     </h2>
     <div id="apple-pay">
-      <h2>Product Title</h2>
+      <h2>Apple Pay Demo</h2>
       <button lang="pt" class="pay-btn" style="" onclick="init()"></button>
     </div>
     <div id="success">
